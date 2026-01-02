@@ -1,92 +1,217 @@
 ﻿<Window x:Class="AKNOVABROW.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:AKNOVABROW"
-        mc:Ignorable="d"
-        Title="AKNOVA Browser" Height="800" Width="1280"
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        Title="AKNOVA Browser - Secure and Private"
+        Height="900" Width="1400"
+        WindowStyle="None"
+        AllowsTransparency="False"
+        Background="#F0F0F0"
         WindowStartupLocation="CenterScreen">
-    <Grid Background="#F5F5F5">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="60"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="30"/>
-        </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Background="White" BorderBrush="#DDD" BorderThickness="0,0,0,1">
-            <Grid Margin="10,5">
+    <Window.Resources>
+        <Style x:Key="ModernButton" TargetType="Button">
+            <Setter Property="Background" Value="#0066FF"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="6" 
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#0052CC"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Border BorderBrush="#2196F3" BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="45"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="28"/>
+            </Grid.RowDefinitions>
+
+            <!-- Custom Title Bar -->
+            <Grid Grid.Row="0" Background="#1976D2" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Column="0" Orientation="Horizontal">
-                    <Border Background="#0066FF" CornerRadius="6" Padding="10,5" Margin="0,0,15,0">
-                        <TextBlock Text="AKNOVA" Foreground="White" FontWeight="Bold" FontSize="14"/>
-                    </Border>
-
-                    <Button x:Name="BackButton" Content="←" Width="40" Height="40" Margin="2"
-                            Click="BackButton_Click" FontSize="18"/>
-                    <Button x:Name="ForwardButton" Content="→" Width="40" Height="40" Margin="2"
-                            Click="ForwardButton_Click" FontSize="18"/>
-                    <Button x:Name="RefreshButton" Content="⟳" Width="40" Height="40" Margin="2"
-                            Click="RefreshButton_Click" FontSize="18"/>
-                    <Button x:Name="HomeButton" Content="🏠" Width="40" Height="40" Margin="2"
-                            Click="HomeButton_Click" FontSize="16"/>
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="10,0">
+                    <Image Source="pack://application:,,,/icon.ico" Width="20" Height="20" Margin="0,0,8,0" 
+                           RenderOptions.BitmapScalingMode="HighQuality" />
+                    <TextBlock Text="AKNOVA Browser" Foreground="White" VerticalAlignment="Center" 
+                               FontWeight="SemiBold" FontSize="13"/>
                 </StackPanel>
-
-                <Border Grid.Column="1" Background="White" BorderBrush="#CCC" BorderThickness="1" 
-                        CornerRadius="20" Margin="10,0">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <TextBlock Grid.Column="0" x:Name="SecureIcon" Text="🔒" 
-                                   Margin="15,0,5,0" VerticalAlignment="Center"/>
-
-                        <TextBox Grid.Column="1" x:Name="AddressBar" 
-                                 BorderThickness="0" Background="Transparent"
-                                 VerticalAlignment="Center" Padding="5"
-                                 KeyDown="AddressBar_KeyDown"
-                                 Text="https://www.google.com"/>
-
-                        <Button Grid.Column="2" Content="Go" Margin="5" Padding="15,5"
-                                Background="#0066FF" Foreground="White" BorderThickness="0"
-                                Click="GoButton_Click" FontWeight="Bold"/>
-                    </Grid>
-                </Border>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
-                    <Button x:Name="AdBlockButton" Content="🛡️" Width="40" Height="40" Margin="2"
-                            Click="AdBlockButton_Click" FontSize="18"/>
-
-                    <Border Background="#00CC66" CornerRadius="10" Padding="6,4" Margin="5,0">
-                        <TextBlock x:Name="AdCountText" Text="0" Foreground="White" FontWeight="Bold"/>
-                    </Border>
-
-                    <Button x:Name="MenuButton" Content="⋮" Width="40" Height="40" Margin="2"
-                            Click="MenuButton_Click" FontSize="20"/>
+                    <Button Content="🛡️" Width="45" Height="35" Background="Transparent" Foreground="White"
+                            BorderThickness="0" Click="SecurityPanel_Click" ToolTip="Security Dashboard"
+                            FontSize="16"/>
+                    <Button Content="─" Width="45" Height="35" Background="Transparent" Foreground="White"
+                            BorderThickness="0" Click="Minimize_Click" FontSize="16" FontWeight="Bold"/>
+                    <Button Content="□" Width="45" Height="35" Background="Transparent" Foreground="White"
+                            BorderThickness="0" Click="Maximize_Click" FontSize="14" FontWeight="Bold"/>
+                    <Button Content="✕" Width="45" Height="35" Background="#D32F2F" Foreground="White"
+                            BorderThickness="0" Click="Close_Click" FontSize="14" FontWeight="Bold"/>
                 </StackPanel>
             </Grid>
-        </Border>
 
-        <wpf:WebView2 x:Name="Browser" Grid.Row="1" Source="https://www.google.com"/>
+            <!-- Top Navigation Bar -->
+            <Grid Grid.Row="1" Background="White">
+                <Grid.Effect>
+                    <DropShadowEffect Color="#000000" Opacity="0.1" BlurRadius="8" ShadowDepth="2"/>
+                </Grid.Effect>
 
-        <Border Grid.Row="2" Background="White" BorderBrush="#DDD" BorderThickness="0,1,0,0">
-            <Grid>
-                <TextBlock x:Name="StatusText" Text="Ready" Margin="15,0" 
-                           VerticalAlignment="Center" FontSize="11"/>
+                <Grid Margin="10,8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
-                <TextBlock x:Name="StatsText" Text="Ads: 0" HorizontalAlignment="Right"
-                           Margin="15,0" VerticalAlignment="Center" FontSize="11" 
-                           FontWeight="Bold" Foreground="Green"/>
+                    <StackPanel Grid.Column="0" Orientation="Horizontal">
+                        <Border CornerRadius="8" Padding="12,6" Margin="0,0,12,0">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#0066FF" Offset="0"/>
+                                    <GradientStop Color="#2196F3" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <TextBlock Text="AKNOVA" Foreground="White" FontWeight="Bold" FontSize="14"/>
+                        </Border>
+
+                        <Button x:Name="BackButton" Content="←" Width="42" Height="42" Margin="2"
+                                Style="{StaticResource ModernButton}" Click="BackButton_Click" 
+                                FontSize="18" Background="#F5F5F5" Foreground="#333"/>
+                        <Button x:Name="ForwardButton" Content="→" Width="42" Height="42" Margin="2"
+                                Style="{StaticResource ModernButton}" Click="ForwardButton_Click"
+                                FontSize="18" Background="#F5F5F5" Foreground="#333"/>
+                        <Button x:Name="RefreshButton" Content="⟳" Width="42" Height="42" Margin="2"
+                                Style="{StaticResource ModernButton}" Click="RefreshButton_Click"
+                                FontSize="18" Background="#F5F5F5" Foreground="#333"/>
+                        <Button Content="🏠" Width="42" Height="42" Margin="2"
+                                Style="{StaticResource ModernButton}" Click="HomeButton_Click"
+                                FontSize="16" Background="#F5F5F5" Foreground="#333"/>
+                    </StackPanel>
+
+                    <Border Grid.Column="1" Background="White" BorderBrush="#DDD" BorderThickness="1.5"
+                            CornerRadius="22" Margin="10,0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" x:Name="SecureIcon" Text="🔒"
+                                       Margin="15,0,8,0" VerticalAlignment="Center" FontSize="14"/>
+
+                            <TextBox Grid.Column="1" x:Name="AddressBar"
+                                     BorderThickness="0" Background="Transparent"
+                                     VerticalAlignment="Center" Padding="5" FontSize="13"
+                                     KeyDown="AddressBar_KeyDown"/>
+
+                            <Button Grid.Column="2" Content="⭐" Width="35" Height="35"
+                                    Background="Transparent" BorderThickness="0" Foreground="#FFC107"
+                                    Click="AddBookmark_Click" FontSize="16" ToolTip="Add Bookmark"/>
+
+                            <Button Grid.Column="3" Content="Go" Margin="5" Padding="18,8"
+                                    Style="{StaticResource ModernButton}" Click="GoButton_Click"/>
+                        </Grid>
+                    </Border>
+
+                    <StackPanel Grid.Column="2" Orientation="Horizontal">
+                        <Button x:Name="AdBlockButton" Content="🛡️" Width="42" Height="42" Margin="2"
+                                Style="{StaticResource ModernButton}" Click="AdBlockButton_Click"
+                                Background="#4CAF50" FontSize="18" ToolTip="Ad Blocker"/>
+
+                        <Border Background="#4CAF50" CornerRadius="12" Padding="8,6" Margin="5,0">
+                            <TextBlock x:Name="AdCountText" Text="0" Foreground="White" 
+                                       FontWeight="Bold" FontSize="12"/>
+                        </Border>
+
+                        <Button Content="☰" Width="42" Height="42" Margin="2"
+                                Style="{StaticResource ModernButton}" Click="MenuButton_Click"
+                                FontSize="18" Background="#F5F5F5" Foreground="#333"/>
+                    </StackPanel>
+                </Grid>
             </Grid>
-        </Border>
-    </Grid>
+
+            <!-- Tabs & VPN Bar -->
+            <Grid Grid.Row="2" Background="#FAFAFA">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Tabs -->
+                <ScrollViewer Grid.Column="0" HorizontalScrollBarVisibility="Auto" 
+                              VerticalScrollBarVisibility="Disabled">
+                    <StackPanel x:Name="TabsPanel" Orientation="Horizontal" Margin="10,5"/>
+                </ScrollViewer>
+
+                <!-- VPN Controls -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="10,5">
+                    <TextBlock Text="VPN:" VerticalAlignment="Center" Margin="0,0,8,0" 
+                               FontWeight="SemiBold" Foreground="#666"/>
+                    <ComboBox x:Name="VPNComboBox" Width="180" Height="32" 
+                              VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <Button x:Name="VPNConnectButton" Content="Connect" Width="80" Height="32"
+                            Style="{StaticResource ModernButton}" Click="VPNConnect_Click"
+                            Background="#FF9800"/>
+                    <Button x:Name="BookmarkButton" Content="📚" Width="42" Height="32" Margin="5,0"
+                            Style="{StaticResource ModernButton}" Click="ShowBookmarks_Click"
+                            Background="#9C27B0" FontSize="16" ToolTip="Bookmarks"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Browser Content -->
+            <Grid Grid.Row="3" x:Name="BrowserContainer">
+                <wv2:WebView2 x:Name="Browser" Source="https://www.google.com"/>
+            </Grid>
+
+            <!-- Status Bar -->
+            <Border Grid.Row="4" Background="#263238" BorderBrush="#37474F" BorderThickness="0,1,0,0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" x:Name="StatusText" Text="Ready"
+                               Margin="15,0" VerticalAlignment="Center" 
+                               FontSize="11" Foreground="#CFD8DC"/>
+
+                    <TextBlock Grid.Column="2" x:Name="SecurityStatus" Text="🛡️ Protected"
+                               Margin="10,0" VerticalAlignment="Center"
+                               FontSize="11" Foreground="#4CAF50" FontWeight="SemiBold"/>
+
+                    <TextBlock Grid.Column="3" x:Name="StatsText" Text="Ads: 0 | VPN: Disconnected"
+                               Margin="15,0" VerticalAlignment="Center"
+                               FontSize="11" Foreground="#CFD8DC" FontWeight="SemiBold"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
 </Window>
